@@ -1,6 +1,6 @@
 body {
-  font-family: sans-serif;
-  background: #eee;
+  padding: 60px 0;
+  background: #FFFFFF;
 }
 
 a, h1, h2 {
@@ -58,6 +58,10 @@ h2 {
   background: #fafafa;
 }
 
+.footer {
+  padding-top: 30px;
+}
+
 .flash {
   background: #CEE5F5;
   padding: 0.5em;
@@ -65,7 +69,6 @@ h2 {
 
 .error {
   color: red;
-  background-color: #FFFFFF;
   font-size: .8em;
 }
 
@@ -126,3 +129,4 @@ h2 {
   text-decoration:none;
   position:relative;
 }
+
