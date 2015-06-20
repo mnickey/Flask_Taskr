@@ -4,13 +4,13 @@
 import os
 import unittest
 
-from views import app, db
-from _config import basedir
-from models import User
+from project import app, db
+from project._config import basedir
+from project.models import User, Task
 
 TEST_DB = 'test.db'
 
-class TasksTests(unittest.TestCase):
+class UsersTests(unittest.TestCase):
 
     ############################
     #    setup and teardown    #
@@ -62,31 +62,13 @@ class TasksTests(unittest.TestCase):
             posted_date='02/04/2015',
             status='1'), follow_redirects=True)
 
-    def create_admin_user(self):
-        new_user = User(name='Superman', email='admin@mnickey.com', password='allpowerful', role='admin')
-        db.session.add(new_user)
+    def test_default_user_role(self):
+        db.session.add(User("Johnny", "john@doe.com", "johnny"))
         db.session.commit()
+        users = db.session.query(User).all()
+        print users
+        for user in users:
+            self.assertEqual(user.role, 'user')
 
-    def test_admin_users_can_complete_tasks_that_are_not_created_by_them(self):
-        self.create_user('Michael', 'example@yahoo.com', 'python')
-        self.login('Michael', 'python')
-        self.app.get('tasks/', follow_redirects=True)
-        self.create_task()
-        self.logout()
-        self.create_admin_user()
-        self.login('Superman', 'allpowerful')
-        self.app.get('tasks/', follow_redirects=True)
-        response = self.app.get("complete/1/", follow_redirects=True)
-        self.assertNotIn('You can only update tasks that belong to you.', response.data)
-
-    def test_admin_users_can_delete_tasks_that_are_not_created_by_them(self):
-        self.create_user('Michael', 'example@yahoo.com', 'python')
-        self.login('Michael', 'python')
-        self.app.get('tasks/', follow_redirects=True)
-        self.create_task()
-        self.logout()
-        self.create_admin_user()
-        self.login('Superman', 'allpowerful')
-        self.app.get('tasks/', follow_redirects=True)
-        response = self.app.get("delete/1/", follow_redirects=True)
-        self.assertNotIn('You can only delete tasks that belong to you.', response.data)
+if __name__ == "__main__":
+    unittest.main()

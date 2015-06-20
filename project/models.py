@@ -1,10 +1,13 @@
-# Flask_Taskr/models.py
+# project/models.py
 
 
-from views import db
+from project import db
+
 import datetime
 
+
 class Task(db.Model):
+
     __tablename__ = "tasks"
 
     task_id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +28,7 @@ class Task(db.Model):
 
     def __repr__(self):
         return '<name {0}>'.format(self.name)
+
 
 class User(db.Model):
 
