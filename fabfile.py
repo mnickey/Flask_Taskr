@@ -31,9 +31,9 @@ def heroku_test():
     local("heroku run nosetests -v")
 
 def deploy():
-    pull()
+    # pull()
     test()
-    commit()
+    # commit()
     heroku()
     heroku_test()
 
