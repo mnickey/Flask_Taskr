@@ -158,4 +158,6 @@ def delete_entry(task_id):
         flash('You can only delete tasks that belong to you.')
         return redirect(url_for('tasks'))
 
-
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500

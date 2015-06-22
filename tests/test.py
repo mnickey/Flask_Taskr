@@ -3,7 +3,7 @@
 import os
 import unittest
 
-from project import app, db
+from project import app, db, bcrypt
 from project._config import basedir
 from project.models import User
 
@@ -26,7 +26,13 @@ class AllTests(unittest.TestCase):
         return self.app.get('logout/', follow_redirects=True)
 
     def create_user(self, name, email, password):
-        new_user = User(name=name, email=email, password=password)
+        new_user = User(name=name, email=email, password=bcrypt.generate_password_hash(password))
+        db.session.add(new_user)
+        db.session.commit()
+
+    def create_admin_user(self):
+        new_user = User(name='superman', email='admin@mnickey.com',
+                        password=bcrypt.generate_password_hash('allpowerful'), role='admin')
         db.session.add(new_user)
         db.session.commit()
 
@@ -41,6 +47,7 @@ class AllTests(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
+        app.config['DEBUG'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, TEST_DB)
         self.app = app.test_client()
         db.create_all()
@@ -88,7 +95,7 @@ class AllTests(unittest.TestCase):
         self.app.get('register/', follow_redirects=True)
         response = self.register(
             'Michael', 'mnickey@gmail.com', 'python', 'python')
-        self.assertIn(b'Thanks for registering. Please log in.', response.data)
+        self.assertIn(b'Thanks for registering. Please login.', response.data)
 
     def test_user_registration_error(self):
         self.app.get('register/', follow_redirects=True)
