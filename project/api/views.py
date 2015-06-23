@@ -6,10 +6,10 @@ from flask import flash, redirect, jsonify, session, url_for, Blueprint, make_re
 from project import db
 from project.models import Task
 
-#CONFIG
+# CONFIG
 api_blueprint = Blueprint('api', __name__)
 
-#HELPER FUNCTIONS
+# HELPER FUNCTIONS
 def login_required(test):
     @wraps(test)
     def wrap(*args, **kwargs):
@@ -30,7 +30,7 @@ def closed_tasks():
     return db.session.query(Task).filter_by(
         status='0').order_by(Task.due_date.asc())
 
-#ROUTES
+# ROUTES
 @api_blueprint.route('/api/v1/tasks/')
 def api_tasks():
     results = db.session.query(Task).limit(10).offset(0).all()
